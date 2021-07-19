@@ -109,7 +109,7 @@ class GoogleWebfontsPlugin {
             filename: cssFile
         } = this.options
 
-		const htmlWebpackPluginBeforeHtmlGeneration = (data, cb) => {
+	const beforeAssetTagGeneration = (data, cb) => {
             const publicPath = data.assets.publicPath
             if (local && (publicPath.indexOf("://") !== -1 || publicPath.indexOf(":") !== -1)) {
                 data.assets.css.push(publicPath + cssFile);
@@ -164,12 +164,12 @@ class GoogleWebfontsPlugin {
                 cb();
             }
             if (compilation.hooks) {
-                if (compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration) {
-            	   compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration.tapAsync(pluginSignature, htmlWebpackPluginBeforeHtmlGeneration);
+                if (compilation.hooks.beforeAssetTagGeneration) {
+            	   compilation.hooks.beforeAssetTagGeneration.tapAsync(pluginSignature, htmlWebpackPluginBeforeHtmlGeneration);
                 }
             	compilation.hooks.additionalAssets.tapAsync(pluginSignature, additionalAssets);
             } else {
-	            compilation.plugin("html-webpack-plugin-before-html-generation", htmlWebpackPluginBeforeHtmlGeneration);
+	            compilation.plugin("html-webpack-plugin-before-html-generation", beforeAssetTagGeneration);
 	            compilation.plugin("additional-assets", additionalAssets);
 	        };
         };
